@@ -1,0 +1,10 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.emotion-tile {
+  @apply h-32 rounded-3xl flex flex-col items-center justify-center
+         text-white text-xl font-bold shadow-lg
+         hover:scale-110 transition;
+}

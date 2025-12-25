@@ -1,20 +1,10 @@
-import { useEffect, useState } from "react";
 
-export default function Countdown({ onFinish }: { onFinish: () => void }) {
-  const [count, setCount] = useState(3);
-
-  useEffect(() => {
-    if (count === 0) {
-      onFinish();
-      return;
-    }
-    const t = setTimeout(() => setCount(count - 1), 1000);
-    return () => clearTimeout(t);
-  }, [count]);
-
+export default function Countdown({ value }: { value: number }) {
   return (
-    <div className="text-6xl font-bold text-primary">
-      {count === 0 ? "START" : count}
+    <div className="flex items-center justify-center h-64">
+      <span className="text-9xl font-extrabold bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent animate-bounce">
+        {value}
+      </span>
     </div>
-  );
+  )
 }
