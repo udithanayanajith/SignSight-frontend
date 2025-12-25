@@ -7,6 +7,7 @@ import CameraBubble from "../components/CameraBubble";
 
 import { useCamera } from "../hooks/useCamera";
 import { enterFullscreen, exitFullscreen } from "../utils/fullscreen";
+import { BACKEND_BASE_URI } from "../config/CONFIG";
 
 const videos = [
   "https://www.youtube.com/embed/0yBnIUX0QAE",
@@ -88,12 +89,23 @@ export default function EmotionFlow() {
     recorderRef.current.stop();
 
     recorderRef.current.onstop = () => {
-      const videoBlob = new Blob(chunksRef.current, {
-        type: "video/webm",
-      });
+      const videoBlob = new Blob(chunksRef.current, { type: "video/webm" });
 
-      // 🔗 TODO: upload to backend
-      // uploadEmotionVideo(videoBlob, step);
+      const uploadEmotionVideo = async (
+        blob: Blob,
+        step: number,
+        email: string
+      ) => {
+        const formData = new FormData();
+        formData.append("email", email);
+        formData.append("step", step.toString());
+        formData.append("video", blob, `emotion_${step}.webm`);
+
+        await fetch(BACKEND_BASE_URI + "/upload-emotion-video", {
+          method: "POST",
+          body: formData,
+        });
+      };
 
       chunksRef.current = [];
     };
