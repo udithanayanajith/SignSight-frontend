@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import Countdown from "../components/Countdown";
 import ProgressIndicator from "../components/ProgressIndicator";
@@ -7,7 +7,6 @@ import CameraBubble from "../components/CameraBubble";
 
 import { useCamera } from "../hooks/useCamera";
 import { enterFullscreen, exitFullscreen } from "../utils/fullscreen";
-import { BACKEND_BASE_URI } from "../config/CONFIG";
 
 const videos = [
   "https://www.youtube.com/embed/0yBnIUX0QAE",
@@ -17,51 +16,44 @@ const videos = [
 
 export default function EmotionFlow() {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // ─────────────────────────────
-  // State
-  // ─────────────────────────────
+  const guardianEmail = location.state?.email as string | undefined;
+
+  useEffect(() => {
+    if (!guardianEmail) {
+      navigate("/instructions", { replace: true });
+    }
+  }, [guardianEmail, navigate]);
+
+  if (!guardianEmail) return null;
+
+  const email = guardianEmail;
+
   const [step, setStep] = useState(0);
   const [countdown, setCountdown] = useState(3);
 
-  // ─────────────────────────────
-  // Camera + Recording
-  // ─────────────────────────────
   const cameraStreamRef = useCamera(true);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
 
-  // ─────────────────────────────
-  // Fullscreen lock
-  // ─────────────────────────────
   useEffect(() => {
     enterFullscreen();
     return () => exitFullscreen();
   }, []);
 
-  // ─────────────────────────────
-  // Disable keyboard navigation
-  // ─────────────────────────────
   useEffect(() => {
     const blockKeys = (e: KeyboardEvent) => e.preventDefault();
     window.addEventListener("keydown", blockKeys);
     return () => window.removeEventListener("keydown", blockKeys);
   }, []);
 
-  // ─────────────────────────────
-  // Countdown logic
-  // ─────────────────────────────
   useEffect(() => {
     if (countdown <= 0) return;
-    const timer = setTimeout(() => {
-      setCountdown((c) => c - 1);
-    }, 1000);
-    return () => clearTimeout(timer);
+    const t = setTimeout(() => setCountdown((c) => c - 1), 1000);
+    return () => clearTimeout(t);
   }, [countdown]);
 
-  // ─────────────────────────────
-  // Start recording when countdown ends
-  // ─────────────────────────────
   useEffect(() => {
     if (countdown !== 0) return;
     if (!cameraStreamRef.current) return;
@@ -75,63 +67,43 @@ export default function EmotionFlow() {
 
     recorderRef.current.start();
 
-    return () => {
-      recorderRef.current?.stop();
-    };
+    return () => recorderRef.current?.stop();
   }, [countdown, cameraStreamRef]);
 
-  // ─────────────────────────────
-  // Stop recording safely
-  // ─────────────────────────────
   const stopRecording = () => {
     if (!recorderRef.current) return;
 
     recorderRef.current.stop();
 
     recorderRef.current.onstop = () => {
-      const videoBlob = new Blob(chunksRef.current, { type: "video/webm" });
+      const blob = new Blob(chunksRef.current, { type: "video/webm" });
 
-      const uploadEmotionVideo = async (
-        blob: Blob,
-        step: number,
-        email: string
-      ) => {
-        const formData = new FormData();
-        formData.append("email", email);
-        formData.append("step", step.toString());
-        formData.append("video", blob, `emotion_${step}.webm`);
+      const formData = new FormData();
+      formData.append("email", email);
+      formData.append("step", step.toString());
+      formData.append("video", blob, `emotion_${step}.webm`);
 
-        await fetch(BACKEND_BASE_URI + "/upload-emotion-video", {
-          method: "POST",
-          body: formData,
-        });
-      };
+      fetch("http://localhost:5000/upload-emotion-video", {
+        method: "POST",
+        body: formData,
+      });
 
       chunksRef.current = [];
     };
   };
 
-  // ─────────────────────────────
-  // Go to next emotion
-  // ─────────────────────────────
   const nextStep = () => {
     stopRecording();
     setStep((s) => s + 1);
     setCountdown(3);
   };
 
-  // ─────────────────────────────
-  // Finish flow
-  // ─────────────────────────────
   useEffect(() => {
     if (step >= videos.length) {
-      navigate("/result");
+      navigate("/result", { replace: true });
     }
   }, [step, navigate]);
 
-  // ─────────────────────────────
-  // Cleanup EVERYTHING on leave
-  // ─────────────────────────────
   useEffect(() => {
     return () => {
       recorderRef.current?.stop();
@@ -141,35 +113,33 @@ export default function EmotionFlow() {
 
   if (step >= videos.length) return null;
 
-  // ─────────────────────────────
-  // UI
-  // ─────────────────────────────
   return (
     <>
       <CameraBubble stream={cameraStreamRef.current} />
 
-      <div className="h-dvh bg-gradient-to-br from-peach to-yellow-100 flex flex-col items-center justify-center overflow-hidden px-4">
-        <ProgressIndicator current={step + 1} total={videos.length} />
+      <div className="min-h-screen overflow-y-auto bg-gradient-to-br from-peach to-yellow-100 px-4 py-6">
+        <div className="max-w-4xl mx-auto flex flex-col items-center">
+          <ProgressIndicator current={step + 1} total={videos.length} />
 
-        {countdown > 0 ? (
-          <Countdown value={countdown} />
-        ) : (
-          <>
-            <iframe
-              src={`${videos[step]}?autoplay=1`}
-              className="w-full max-w-3xl aspect-video rounded-3xl shadow-xl"
-              allow="autoplay"
-            />
+          {countdown > 0 ? (
+            <Countdown value={countdown} />
+          ) : (
+            <>
+              <iframe
+                src={`${videos[step]}?autoplay=1`}
+                className="w-full aspect-video rounded-3xl shadow-xl"
+                allow="autoplay"
+              />
 
-            {/* DEV ONLY */}
-            <button
-              onClick={nextStep}
-              className="mt-6 px-6 py-3 bg-red-400 text-white rounded-full shadow-lg"
-            >
-              Next (Dev)
-            </button>
-          </>
-        )}
+              <button
+                onClick={nextStep}
+                className="mt-8 px-6 py-3 bg-red-400 text-white rounded-full shadow-lg"
+              >
+                Next (Dev)
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </>
   );

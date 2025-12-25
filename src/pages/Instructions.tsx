@@ -66,7 +66,7 @@ export default function Instructions() {
             <div className="mt-4 text-center">
               <PrimaryButton
                 disabled={!email.includes("@")}
-                onClick={() => nav("/emotion")}
+                onClick={() => nav("/emotion", { state: { email } })}
               >
                 Get Started 🚀
               </PrimaryButton>
