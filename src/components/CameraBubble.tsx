@@ -16,7 +16,7 @@ export default function CameraBubble({ stream }: Props) {
   if (!stream) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 w-32 h-32 rounded-full overflow-hidden border-4 border-orange-400 shadow-lg bg-black z-50">
+    <div className="fixed top-20 right-6 w-32 h-32 rounded-full overflow-hidden border-4 border-orange-400 shadow-lg bg-black z-50">
       <video
         ref={videoRef}
         autoPlay

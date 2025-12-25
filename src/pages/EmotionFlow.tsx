@@ -117,7 +117,7 @@ export default function EmotionFlow() {
     <>
       <CameraBubble stream={cameraStreamRef.current} />
 
-      <div className="min-h-screen overflow-y-auto bg-gradient-to-br from-peach to-yellow-100 px-4 py-6">
+      <div className="min-h-screen overflow-hidden bg-gradient-to-br from-peach to-yellow-100 px-4 py-6">
         <div className="max-w-4xl mx-auto flex flex-col items-center">
           <ProgressIndicator current={step + 1} total={videos.length} />
 
@@ -128,6 +128,11 @@ export default function EmotionFlow() {
               <iframe
                 src={`${videos[step]}?autoplay=1`}
                 className="w-full aspect-video rounded-3xl shadow-xl"
+                style={{
+                  width: "100%",
+                  height: "600px", 
+                  maxHeight: "80vh", 
+                }}
                 allow="autoplay"
               />
 
