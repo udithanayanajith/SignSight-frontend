@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Landing from "./pages/Landing";
+import Emotion_Landing from "./pages/Emotion_Landing";
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Landing />} />
+        <Route path="/emotion_landing" element={<Emotion_Landing />} />
       </Routes>
     </BrowserRouter>
   );

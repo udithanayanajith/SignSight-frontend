@@ -1,5 +1,7 @@
-node_mo# Dependencies
+# Dependencies
 node_modules
+node_modules/
+/node_modules
 
 # Build outputs
 dist/
@@ -11,6 +13,7 @@ dist-ssr/
 
 # System files
 .DS_Store
+.vite
 
 # Editor files
 .vscode/
