@@ -1,0 +1,138 @@
+{
+  "level": "Intermediate",
+  "categories": {
+    "category_1": [],
+
+    "category_2": [
+      {
+        "id": "I-C2-1",
+        "area": "Short sentences",
+        "question": "Which video shows I NEED WATER?",
+        "options": [
+          { "id": "A", "video": "https://www.youtube.com/watch?v=mCFMn0UkRt0" },
+          { "id": "B", "video": "https://www.youtube.com/watch?v=mCFMn0UkRt0" },
+          { "id": "C", "video": "https://www.youtube.com/watch?v=mCFMn0UkRt0" },
+          { "id": "D", "video": "https://www.youtube.com/watch?v=mCFMn0UkRt0" }
+        ],
+        "correct_answer": "A"
+      },
+      {
+        "id": "I-C2-2",
+        "area": "Actions + objects",
+        "question": "Which video shows DRINK WATER?",
+        "options": [
+          { "id": "A", "video": "https://www.youtube.com/watch?v=mCFMn0UkRt0" },
+          { "id": "B", "video": "https://www.youtube.com/watch?v=mCFMn0UkRt0" },
+          { "id": "C", "video": "https://www.youtube.com/watch?v=mCFMn0UkRt0" },
+          { "id": "D", "video": "https://www.youtube.com/watch?v=mCFMn0UkRt0" }
+        ],
+        "correct_answer": "A"
+      },
+      {
+        "id": "I-C2-3",
+        "area": "Everyday objects",
+        "question": "Which video shows OPEN DOOR?",
+        "options": [
+          { "id": "A", "video": "https://www.youtube.com/watch?v=mCFMn0UkRt0" },
+          {
+            "id": "B",
+            "video": "https://youtu.be/mCFMn0UkRt0?si=Btu8cOh91OKq28Op"
+          },
+          { "id": "C", "video": "https://www.youtube.com/watch?v=mCFMn0UkRt0" },
+          { "id": "D", "video": "https://www.youtube.com/watch?v=mCFMn0UkRt0" }
+        ],
+        "correct_answer": "A"
+      },
+      {
+        "id": "I-C2-4",
+        "area": "Basic emotions",
+        "question": "Which video shows SURPRISED?",
+        "options": [
+          { "id": "A", "video": "https://www.youtube.com/watch?v=mCFMn0UkRt0" },
+          { "id": "B", "video": "https://www.youtube.com/watch?v=mCFMn0UkRt0" },
+          { "id": "C", "video": "https://www.youtube.com/watch?v=mCFMn0UkRt0" },
+          { "id": "D", "video": "https://www.youtube.com/watch?v=mCFMn0UkRt0" }
+        ],
+        "correct_answer": "A"
+      },
+      {
+        "id": "I-C2-5",
+        "area": "Numbers",
+        "question": "Which video shows NUMBER 20?",
+        "options": [
+          {
+            "id": "A",
+            "video": "https://youtu.be/mCFMn0UkRt0?si=Btu8cOh91OKq28Op"
+          },
+          { "id": "B", "video": "https://www.youtube.com/watch?v=mCFMn0UkRt0" },
+          {
+            "id": "C",
+            "video": "https://youtu.be/mCFMn0UkRt0?si=Btu8cOh91OKq28Op"
+          },
+          { "id": "D", "video": "https://www.youtube.com/watch?v=mCFMn0UkRt0" }
+        ],
+        "correct_answer": "A"
+      }
+    ],
+
+    "category_3": [
+      {
+        "id": "I-C3-1",
+        "area": "Actions + objects",
+        "question_video": "https://www.youtube.com/watch?v=mCFMn0UkRt0",
+        "options": [
+          { "id": "A", "text": "Open the door" },
+          { "id": "B", "text": "Close the book" },
+          { "id": "C", "text": "Drink water" }
+        ],
+        "correct_answer": "A"
+      },
+      {
+        "id": "I-C3-2",
+        "area": "Everyday objects",
+        "question_video": "https://www.youtube.com/watch?v=mCFMn0UkRt0",
+        "options": [
+          { "id": "A", "text": "Use phone" },
+          { "id": "B", "text": "Read book" },
+          { "id": "C", "text": "Sleep" }
+        ],
+        "correct_answer": "A"
+      },
+      {
+        "id": "I-C3-3",
+        "area": "Short sentences",
+        "question_video": "https://www.youtube.com/watch?v=mCFMn0UkRt0",
+        "options": [
+          { "id": "A", "text": "I am hungry" },
+          { "id": "B", "text": "I am tired" },
+          { "id": "C", "text": "I am happy" }
+        ],
+        "correct_answer": "A"
+      },
+      {
+        "id": "I-C3-4",
+        "area": "Basic emotions",
+        "question_video": "https://www.youtube.com/watch?v=mCFMn0UkRt0",
+        "options": [
+          { "id": "A", "text": "I am scared" },
+          { "id": "B", "text": "I am excited" },
+          { "id": "C", "text": "I am bored" }
+        ],
+        "correct_answer": "A"
+      },
+      {
+        "id": "I-C3-5",
+        "area": "Numbers",
+        "question_video": "https://www.youtube.com/watch?v=mCFMn0UkRt0",
+        "options": [
+          { "id": "A", "text": "Number 15" },
+          { "id": "B", "text": "Number 10" },
+          { "id": "C", "text": "Number 5" }
+        ],
+        "correct_answer": "A"
+      }
+    ],
+
+    "category_4": []
+  }
+}
