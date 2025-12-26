@@ -1,18 +1,22 @@
 # Dependencies
 node_modules/
+node_modules/.vite/
+
+# Vite cache (extra safe)
+.vite/
 
 # Vite build outputs and cache
 dist/
 dist-ssr/
 .vite/
 
-# Environment files
+# Env
 .env
 .env.local
 
-# System files
+# System
 .DS_Store
 
-# Editor files
+# Editor
 .vscode/
 .idea/
