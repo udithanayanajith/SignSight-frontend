@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Emotion_landing from "./pages/Emotion_landing";
+import Emotion_landing from "./pages/hasadara/Emotion_Landing";
 
 export default function App() {
   return (
