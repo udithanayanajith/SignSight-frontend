@@ -5,7 +5,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Emotion_landing />} />
+        <Route path="/emotion_landing" element={<Emotion_landing />} />
       </Routes>
     </BrowserRouter>
   );
