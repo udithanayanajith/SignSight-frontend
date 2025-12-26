@@ -1,5 +1,5 @@
-import Navbar from "../components/Navbar";
-import PrimaryButton from "../components/PrimaryButton";
+import Navbar from "../../components/hasadara/Navbar";
+import PrimaryButton from "../../components/hasadara/PrimaryButton";
 import { useNavigate } from "react-router-dom";
 
 export default function Landing() {
