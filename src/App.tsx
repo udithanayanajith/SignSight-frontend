@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Emotion_landing from "./pages/Emotion_landing";
-import Instructions from "./pages/Instructions";
-import EmotionFlow from "./pages/EmotionFlow";
-import Result from "./pages/Result";
+import Emotion_landing from "./pages/hasadara/Emotion_Landing";
+import Instructions from "./pages/hasadara/Instructions";
+import EmotionFlow from "./pages/hasadara/EmotionFlow";
+import Result from "./pages/hasadara/Result";
 
 export default function App() {
   return (

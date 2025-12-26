@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-import Countdown from "../components/Countdown";
-import ProgressIndicator from "../components/ProgressIndicator";
-import CameraBubble from "../components/CameraBubble";
+import Countdown from "../../components/Countdown";
+import ProgressIndicator from "../../components/ProgressIndicator";
+import CameraBubble from "../../components/CameraBubble";
 
 import { useCamera } from "../hooks/useCamera";
 import { enterFullscreen, exitFullscreen } from "../utils/fullscreen";
@@ -130,8 +130,8 @@ export default function EmotionFlow() {
                 className="w-full aspect-video rounded-3xl shadow-xl"
                 style={{
                   width: "100%",
-                  height: "600px", 
-                  maxHeight: "80vh", 
+                  height: "600px",
+                  maxHeight: "80vh",
                 }}
                 allow="autoplay"
               />
