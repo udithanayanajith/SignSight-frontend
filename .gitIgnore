@@ -1,0 +1,17 @@
+node_mo# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+dist-ssr/
+
+# Environment files
+.env
+.env.local
+
+# System files
+.DS_Store
+
+# Editor files
+.vscode/
+.idea/
