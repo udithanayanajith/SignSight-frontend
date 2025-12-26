@@ -14,6 +14,8 @@ const videos = [
   "https://www.youtube.com/embed/0yBnIUX0QAE",
 ];
 
+const API_URL = "http://localhost:5000";
+
 export default function EmotionFlow() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -32,6 +34,12 @@ export default function EmotionFlow() {
 
   const [step, setStep] = useState(0);
   const [countdown, setCountdown] = useState(3);
+  const [uploadStatus, setUploadStatus] = useState<{
+    uploading: boolean;
+    error?: string;
+    videosCollected?: number;
+    taskId?: string;
+  }>({ uploading: false });
 
   const cameraStreamRef = useCamera(true);
   const recorderRef = useRef<MediaRecorder | null>(null);
@@ -70,12 +78,12 @@ export default function EmotionFlow() {
     return () => recorderRef.current?.stop();
   }, [countdown, cameraStreamRef]);
 
-  const stopRecording = () => {
+  const stopRecording = async () => {
     if (!recorderRef.current) return;
 
     recorderRef.current.stop();
 
-    recorderRef.current.onstop = () => {
+    recorderRef.current.onstop = async () => {
       const blob = new Blob(chunksRef.current, { type: "video/webm" });
 
       const formData = new FormData();
@@ -83,12 +91,58 @@ export default function EmotionFlow() {
       formData.append("step", step.toString());
       formData.append("video", blob, `emotion_${step}.webm`);
 
-      fetch("http://localhost:5000/upload-emotion-video", {
-        method: "POST",
-        body: formData,
-      });
+      setUploadStatus({ uploading: true });
 
-      chunksRef.current = [];
+      try {
+        console.log(`📤 Uploading video for step ${step}...`);
+
+        const response = await fetch(`${API_URL}/upload-emotion-video`, {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.error || `Upload failed: ${response.status}`);
+        }
+
+        console.log(`✅ Upload successful:`, result);
+
+        // Update status
+        setUploadStatus({
+          uploading: false,
+          videosCollected: result.videos_collected,
+          taskId: result.task_id,
+        });
+
+        // Check if processing started
+        if (result.status === "processing_started") {
+          console.log("🎉 All videos uploaded! Processing started.");
+          console.log(`Task ID: ${result.task_id}`);
+
+          // Optional: Show success message or navigate to results page
+          // You could store taskId in localStorage or state to check later
+          localStorage.setItem("lastTaskId", result.task_id);
+        } else {
+          console.log(`📊 Progress: ${result.videos_collected}/3 videos`);
+        }
+      } catch (error) {
+        console.error(`❌ Upload error:`, error);
+        setUploadStatus({
+          uploading: false,
+          error: error instanceof Error ? error.message : "Upload failed",
+        });
+
+        // Optional: Show error to user or retry
+        alert(
+          `Failed to upload video: ${
+            error instanceof Error ? error.message : "Unknown error"
+          }`
+        );
+      } finally {
+        chunksRef.current = [];
+      }
     };
   };
 
@@ -96,11 +150,18 @@ export default function EmotionFlow() {
     stopRecording();
     setStep((s) => s + 1);
     setCountdown(3);
+    setUploadStatus({ uploading: false }); // Reset upload status
   };
 
   useEffect(() => {
     if (step >= videos.length) {
-      navigate("/result", { replace: true });
+      // Check if we have a task ID to show results
+      const taskId = localStorage.getItem("lastTaskId");
+      if (taskId) {
+        navigate("/result", { replace: true, state: { taskId } });
+      } else {
+        navigate("/result", { replace: true });
+      }
     }
   }, [step, navigate]);
 
@@ -121,6 +182,26 @@ export default function EmotionFlow() {
         <div className="max-w-4xl mx-auto flex flex-col items-center">
           <ProgressIndicator current={step + 1} total={videos.length} />
 
+          {/* Upload Status Indicator */}
+          {uploadStatus.uploading && (
+            <div className="mb-4 px-4 py-2 bg-blue-100 text-blue-800 rounded-lg">
+              📤 Uploading video...
+            </div>
+          )}
+
+          {uploadStatus.error && (
+            <div className="mb-4 px-4 py-2 bg-red-100 text-red-800 rounded-lg">
+              ❌ {uploadStatus.error}
+            </div>
+          )}
+
+          {uploadStatus.videosCollected !== undefined &&
+            !uploadStatus.uploading && (
+              <div className="mb-4 px-4 py-2 bg-green-100 text-green-800 rounded-lg">
+                ✅ Video uploaded! ({uploadStatus.videosCollected}/3 collected)
+              </div>
+            )}
+
           {countdown > 0 ? (
             <Countdown value={countdown} />
           ) : (
@@ -130,17 +211,22 @@ export default function EmotionFlow() {
                 className="w-full aspect-video rounded-3xl shadow-xl"
                 style={{
                   width: "100%",
-                  height: "600px", 
-                  maxHeight: "80vh", 
+                  height: "600px",
+                  maxHeight: "80vh",
                 }}
                 allow="autoplay"
               />
 
               <button
                 onClick={nextStep}
-                className="mt-8 px-6 py-3 bg-red-400 text-white rounded-full shadow-lg"
+                disabled={uploadStatus.uploading}
+                className={`mt-8 px-6 py-3 rounded-full shadow-lg transition-all ${
+                  uploadStatus.uploading
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-red-400 hover:bg-red-500 text-white"
+                }`}
               >
-                Next (Dev)
+                {uploadStatus.uploading ? "Uploading..." : "Next"}
               </button>
             </>
           )}
