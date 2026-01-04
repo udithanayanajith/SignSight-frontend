@@ -5,6 +5,9 @@ import MentorSignUp from "./pages/kaveesha/MentorSignUp";
 import StudentLearningLanding from "./pages/kaveesha/StudentLanding";
 import QuizEngine from "./pages/kaveesha/learn/QuizEngine";
 import Results from "./pages/kaveesha/ResultPage";
+import LessonsHome from "./pages/kaveesha/lessons/LessonsHome";
+
+import LessonPlayer from "./pages/kaveesha/lessons/LessonsPlayer";
 
 export default function App() {
   return (
@@ -18,6 +21,14 @@ export default function App() {
         <Route path="/results" element={<Results />} />
 
         <Route path="/learn/:level" element={<QuizEngine />} />
+
+        <Route path="/lessons" element={<LessonsHome />} />
+
+        <Route path="/lessons" element={<LessonsHome />} />
+        <Route path="/lessons/:category/:item" element={<LessonPlayer />} />
+
+        {/* <Route path="/lessons/food/:food" element={<FoodPlayer />} />
+        <Route path="/lessons/numbers/:number" element={<NumberViewer />} /> */}
       </Routes>
     </BrowserRouter>
   );
