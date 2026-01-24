@@ -15,7 +15,7 @@ export default function Navbar() {
         {/* Logo */}
         <div
           className="flex items-center gap-3 cursor-pointer"
-          onClick={() => nav("/emotion_landing")}
+          onClick={() => nav("/")}
         >
           <div className="bg-white/30 backdrop-blur rounded-full p-2">
             <span className="text-2xl">😊</span>
@@ -28,7 +28,7 @@ export default function Navbar() {
         {/* Navigation links */}
         <div className="hidden md:flex items-center gap-6">
           <button
-            onClick={() => nav("/emotion_landing")}
+            onClick={() => nav("/")}
             className="text-white text-lg font-semibold hover:underline"
           >
             Home
