@@ -19,3 +19,6 @@ dist-ssr/
 # Editor
 .vscode/
 .idea/
+
+*.mp4
+*.mov
