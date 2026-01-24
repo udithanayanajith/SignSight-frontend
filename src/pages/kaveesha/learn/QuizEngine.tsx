@@ -6,8 +6,12 @@ import Category2_TextToVideo from "../../../components/kaveesha/quiz/Category2_T
 import Category3_VideoToText from "../../../components/kaveesha/quiz/Category3_VideoToText";
 import Category4_SignToSign from "../../../components/kaveesha/quiz/Category4_SignToSign";
 import GlassPage from "../../../components/ui/GlassPage";
+import { useAppSelector } from "../../../store";
 
 export default function QuizEngine() {
+  const questions = useAppSelector((state) => state.questions);
+  console.log("questions", questions);
+
   const { level } = useParams();
   const navigate = useNavigate();
   const [data, setData] = useState<any>(null);
@@ -31,8 +35,8 @@ export default function QuizEngine() {
     level === "basic"
       ? ["category_1", "category_2"]
       : level === "intermediate"
-      ? ["category_2", "category_3"]
-      : ["category_3", "category_4"];
+        ? ["category_2", "category_3"]
+        : ["category_3", "category_4"];
 
   const question = data.categories[order[catIndex]][qIndex];
 

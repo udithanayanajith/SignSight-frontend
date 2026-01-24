@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import YoutubePlayer from "./YoutubePlayer";
+import { addAnswerForQuestion, useAppDispatch } from "../../../store";
 
 export default function Category3_VideoToText({ question, onNext }: any) {
+  const dispatch = useAppDispatch();
+
   const [selected, setSelected] = useState<string | null>(null);
 
   useEffect(() => {
@@ -32,7 +35,16 @@ export default function Category3_VideoToText({ question, onNext }: any) {
               return (
                 <button
                   key={opt.id}
-                  onClick={() => setSelected(opt.id)}
+                  onClick={() => {
+                    setSelected(opt.id);
+                    dispatch(
+                      addAnswerForQuestion({
+                        question_id: question.id,
+                        correct_answer: opt.id,
+                        area: question.area,
+                      }),
+                    );
+                  }}
                   className={`
                     w-full px-6 py-4 rounded-full text-lg font-semibold
                     transition-all duration-200 text-left

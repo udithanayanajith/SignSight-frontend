@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { toYoutubeEmbed } from "../../../utils/kaveesha/youtube";
+import { addAnswerForQuestion, useAppDispatch } from "../../../store";
 
 export default function Category2_TextToVideo({ question, onNext }: any) {
+  const dispatch = useAppDispatch();
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
@@ -65,7 +68,16 @@ export default function Category2_TextToVideo({ question, onNext }: any) {
             {question.options.map((opt: any, i: number) => (
               <button
                 key={opt.id}
-                onClick={() => setActiveIndex(i)}
+                onClick={() => {
+                  setActiveIndex(i);
+                  dispatch(
+                    addAnswerForQuestion({
+                      question_id: question.id,
+                      correct_answer: opt.id,
+                      area: question.area,
+                    }),
+                  );
+                }}
                 className={`
                   relative rounded-xl overflow-hidden aspect-video
                   transition-all duration-300

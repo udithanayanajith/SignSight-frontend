@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { addAnswerForQuestion, useAppDispatch } from "../../../store";
 
 export default function Category1_MCQ({ question, onNext }: any) {
   const [selected, setSelected] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
 
   useEffect(() => setSelected(null), [question.id]);
 
@@ -13,10 +15,21 @@ export default function Category1_MCQ({ question, onNext }: any) {
       </h2>
 
       <div className="grid sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
-        {question.options.map((o: any) => (
+        {question?.options?.map((o: any) => (
           <button
             key={o.id}
-            onClick={() => setSelected(o.id)}
+            onClick={() => {
+              // console.log("question", question);
+              setSelected(o.id);
+
+              dispatch(
+                addAnswerForQuestion({
+                  question_id: question.id,
+                  correct_answer: o.id,
+                  area: question.area,
+                }),
+              );
+            }}
             className={`
               rounded-3xl p-4 bg-white/70 backdrop-blur shadow-lg transition
               hover:scale-105
