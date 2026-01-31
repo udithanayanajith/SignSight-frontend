@@ -19,14 +19,17 @@ export default function Category1_MCQ({ question, onNext }: any) {
           <button
             key={o.id}
             onClick={() => {
-              // console.log("question", question);
+              console.log("questiondsdsdsdsdsdsdsdsdsd", question);
               setSelected(o.id);
 
               dispatch(
                 addAnswerForQuestion({
                   question_id: question.id,
-                  correct_answer: o.id,
+                  correct_answer: question.correct_answer,
                   area: question.area,
+                  user_answer: o.id,
+                  level: "basic",
+                  category: "category_1"
                 }),
               );
             }}

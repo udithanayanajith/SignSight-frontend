@@ -1,12 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import YoutubePlayer from "./YoutubePlayer";
 
-export default function Category4_SignToSign({ question, onNext }: any) {
+export default function Category4_SignToSign({
+  question,
+  level,
+  category,
+  onNext,
+  onVideoRecorded,
+}: any) {
   const liveVideoRef = useRef<HTMLVideoElement>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
-  const timerRef = useRef<any>(null);
-  const countdownRef = useRef<any>(null);
+  const timerRef = useRef<number | null>(null);
+  const countdownRef = useRef<number | null>(null);
 
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [countdown, setCountdown] = useState<number | null>(null);
@@ -14,7 +20,7 @@ export default function Category4_SignToSign({ question, onNext }: any) {
   const [timeLeft, setTimeLeft] = useState(30);
   const [recordedUrl, setRecordedUrl] = useState<string | null>(null);
 
-  /* ================= CAMERA HELPERS ================= */
+  /* ================= CAMERA ================= */
 
   async function openCamera() {
     const s = await navigator.mediaDevices.getUserMedia({
@@ -23,33 +29,29 @@ export default function Category4_SignToSign({ question, onNext }: any) {
     });
 
     setStream(s);
-
     if (liveVideoRef.current) {
       liveVideoRef.current.srcObject = s;
     }
   }
 
   function stopCamera() {
-    if (liveVideoRef.current) {
-      liveVideoRef.current.srcObject = null;
-    }
-
-    stream?.getTracks().forEach((track) => track.stop());
+    stream?.getTracks().forEach((t) => t.stop());
+    if (liveVideoRef.current) liveVideoRef.current.srcObject = null;
     setStream(null);
   }
 
-  /* ================= RECORDING FLOW ================= */
+  /* ================= RECORDING ================= */
 
   function startCountdown() {
     let count = 5;
     setCountdown(count);
 
-    countdownRef.current = setInterval(() => {
+    countdownRef.current = window.setInterval(() => {
       count--;
       setCountdown(count);
 
       if (count === 0) {
-        clearInterval(countdownRef.current);
+        clearInterval(countdownRef.current!);
         setCountdown(null);
         startRecording();
       }
@@ -60,7 +62,9 @@ export default function Category4_SignToSign({ question, onNext }: any) {
     if (!stream) return;
 
     chunksRef.current = [];
-    const recorder = new MediaRecorder(stream);
+    const recorder = new MediaRecorder(stream, {
+      mimeType: "video/webm",
+    });
     recorderRef.current = recorder;
 
     recorder.ondataavailable = (e) => {
@@ -69,14 +73,23 @@ export default function Category4_SignToSign({ question, onNext }: any) {
 
     recorder.onstop = () => {
       const blob = new Blob(chunksRef.current, { type: "video/webm" });
+      const file = new File([blob], `${question.id}.webm`, {
+        type: "video/webm",
+      });
+
       setRecordedUrl(URL.createObjectURL(blob));
+
+      // 🔥 SEND FILE UP TO QuizEngine
+      onVideoRecorded(file);
+
+      stopCamera();
     };
 
     recorder.start();
     setRecording(true);
     setTimeLeft(30);
 
-    timerRef.current = setInterval(() => {
+    timerRef.current = window.setInterval(() => {
       setTimeLeft((t) => {
         if (t <= 1) {
           stopRecording();
@@ -88,10 +101,9 @@ export default function Category4_SignToSign({ question, onNext }: any) {
   }
 
   function stopRecording() {
-    clearInterval(timerRef.current);
+    if (timerRef.current) clearInterval(timerRef.current);
     recorderRef.current?.stop();
     setRecording(false);
-    stopCamera(); // 🔴 CAMERA OFF
   }
 
   async function retake() {
@@ -105,8 +117,8 @@ export default function Category4_SignToSign({ question, onNext }: any) {
   useEffect(() => {
     return () => {
       stopCamera();
-      clearInterval(timerRef.current);
-      clearInterval(countdownRef.current);
+      if (timerRef.current) clearInterval(timerRef.current);
+      if (countdownRef.current) clearInterval(countdownRef.current);
     };
   }, []);
 
@@ -119,50 +131,40 @@ export default function Category4_SignToSign({ question, onNext }: any) {
       </h2>
 
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* LEFT — QUESTION VIDEO */}
-        <div className="bg-white/80 backdrop-blur rounded-3xl shadow-xl p-5">
+        {/* LEFT */}
+        <div className="bg-white/80 rounded-3xl shadow-xl p-5">
           <YoutubePlayer url={question.question_video} />
         </div>
 
-        {/* RIGHT — CAMERA / PLAYBACK */}
-        <div className="bg-white/80 backdrop-blur rounded-3xl shadow-xl p-6 flex flex-col items-center justify-center">
+        {/* RIGHT */}
+        <div className="bg-white/80 rounded-3xl shadow-xl p-6 flex flex-col items-center">
           {!recordedUrl ? (
             <>
-              {/* LIVE CAMERA */}
-              <div className="relative w-full rounded-2xl overflow-hidden bg-black">
-                <video
-                  ref={liveVideoRef}
-                  autoPlay
-                  muted
-                  playsInline
-                  className="w-full aspect-video object-cover mirror"
-                />
+              <video
+                ref={liveVideoRef}
+                autoPlay
+                muted
+                playsInline
+                className="w-full aspect-video rounded-2xl bg-black mirror"
+              />
 
-                {countdown !== null && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/60 text-white text-7xl font-extrabold">
-                    {countdown}
-                  </div>
-                )}
+              {countdown !== null && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/60 text-white text-7xl font-bold">
+                  {countdown}
+                </div>
+              )}
 
-                {recording && (
-                  <div className="absolute top-3 left-3 bg-red-600 text-white px-3 py-1 rounded-full text-sm">
-                    🔴 {timeLeft}s
-                  </div>
-                )}
+              {recording && (
+                <div className="mt-2 text-red-600 font-bold">
+                  🔴 {timeLeft}s
+                </div>
+              )}
 
-                {!stream && !recording && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/60 text-white text-lg">
-                    Camera is off
-                  </div>
-                )}
-              </div>
-
-              {/* CONTROLS */}
               <div className="mt-6 flex gap-4">
                 {!stream && (
                   <button
                     onClick={openCamera}
-                    className="px-8 py-3 rounded-full bg-blue-500 text-white font-bold hover:bg-blue-600"
+                    className="px-8 py-3 bg-blue-500 text-white rounded-full font-bold"
                   >
                     📷 Open Camera
                   </button>
@@ -171,7 +173,7 @@ export default function Category4_SignToSign({ question, onNext }: any) {
                 {stream && !recording && countdown === null && (
                   <button
                     onClick={startCountdown}
-                    className="px-8 py-3 rounded-full bg-red-500 text-white font-bold hover:bg-red-600"
+                    className="px-8 py-3 bg-red-500 text-white rounded-full font-bold"
                   >
                     🎥 Start Recording
                   </button>
@@ -180,7 +182,7 @@ export default function Category4_SignToSign({ question, onNext }: any) {
                 {recording && (
                   <button
                     onClick={stopRecording}
-                    className="px-8 py-3 rounded-full bg-gray-700 text-white font-bold"
+                    className="px-8 py-3 bg-gray-700 text-white rounded-full font-bold"
                   >
                     ⛔ Stop
                   </button>
@@ -189,24 +191,23 @@ export default function Category4_SignToSign({ question, onNext }: any) {
             </>
           ) : (
             <>
-              {/* ▶️ PLAYBACK */}
               <video
                 src={recordedUrl}
                 controls
-                className="w-full aspect-video rounded-2xl shadow-md"
+                className="w-full aspect-video rounded-2xl"
               />
 
               <div className="mt-6 flex gap-4">
                 <button
                   onClick={retake}
-                  className="px-6 py-3 rounded-full bg-gray-200 font-semibold hover:bg-gray-300"
+                  className="px-6 py-3 bg-gray-200 rounded-full font-semibold"
                 >
                   🔁 Retake
                 </button>
 
                 <button
                   onClick={onNext}
-                  className="px-8 py-3 rounded-full bg-green-500 text-white font-bold hover:bg-green-600"
+                  className="px-8 py-3 bg-green-500 text-white rounded-full font-bold"
                 >
                   ✅ Submit
                 </button>

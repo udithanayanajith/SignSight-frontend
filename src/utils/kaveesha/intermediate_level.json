@@ -6,7 +6,7 @@
     "category_2": [
       {
         "id": "I-C2-1",
-        "area": "Short sentences",
+        "area": "family",
         "question": "Which video shows I NEED WATER?",
         "options": [
           { "id": "A", "video": "https://www.youtube.com/watch?v=mCFMn0UkRt0" },
@@ -18,7 +18,7 @@
       },
       {
         "id": "I-C2-2",
-        "area": "Actions + objects",
+        "area": "objects",
         "question": "Which video shows DRINK WATER?",
         "options": [
           { "id": "A", "video": "https://www.youtube.com/watch?v=mCFMn0UkRt0" },
@@ -30,7 +30,7 @@
       },
       {
         "id": "I-C2-3",
-        "area": "Everyday objects",
+        "area": "objects",
         "question": "Which video shows OPEN DOOR?",
         "options": [
           { "id": "A", "video": "https://www.youtube.com/watch?v=mCFMn0UkRt0" },
@@ -45,7 +45,7 @@
       },
       {
         "id": "I-C2-4",
-        "area": "Basic emotions",
+        "area": "emotions",
         "question": "Which video shows SURPRISED?",
         "options": [
           { "id": "A", "video": "https://www.youtube.com/watch?v=mCFMn0UkRt0" },
@@ -57,7 +57,7 @@
       },
       {
         "id": "I-C2-5",
-        "area": "Numbers",
+        "area": "numbers",
         "question": "Which video shows NUMBER 20?",
         "options": [
           {
@@ -78,7 +78,7 @@
     "category_3": [
       {
         "id": "I-C3-1",
-        "area": "Actions + objects",
+        "area": "objects",
         "question_video": "https://www.youtube.com/watch?v=mCFMn0UkRt0",
         "options": [
           { "id": "A", "text": "Open the door" },
@@ -89,7 +89,7 @@
       },
       {
         "id": "I-C3-2",
-        "area": "Everyday objects",
+        "area": "objects",
         "question_video": "https://www.youtube.com/watch?v=mCFMn0UkRt0",
         "options": [
           { "id": "A", "text": "Use phone" },
@@ -100,7 +100,7 @@
       },
       {
         "id": "I-C3-3",
-        "area": "Short sentences",
+        "area": "family",
         "question_video": "https://www.youtube.com/watch?v=mCFMn0UkRt0",
         "options": [
           { "id": "A", "text": "I am hungry" },
@@ -111,7 +111,7 @@
       },
       {
         "id": "I-C3-4",
-        "area": "Basic emotions",
+        "area": "emotions",
         "question_video": "https://www.youtube.com/watch?v=mCFMn0UkRt0",
         "options": [
           { "id": "A", "text": "I am scared" },
@@ -122,7 +122,7 @@
       },
       {
         "id": "I-C3-5",
-        "area": "Numbers",
+        "area": "numbers",
         "question_video": "https://www.youtube.com/watch?v=mCFMn0UkRt0",
         "options": [
           { "id": "A", "text": "Number 15" },

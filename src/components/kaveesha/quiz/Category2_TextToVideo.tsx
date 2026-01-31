@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import { toYoutubeEmbed } from "../../../utils/kaveesha/youtube";
 import { addAnswerForQuestion, useAppDispatch } from "../../../store";
 
-export default function Category2_TextToVideo({ question, onNext }: any) {
+export default function Category2_TextToVideo({
+  question,
+  level,
+  category,
+  onNext,
+}: any) {
   const dispatch = useAppDispatch();
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -12,6 +17,22 @@ export default function Category2_TextToVideo({ question, onNext }: any) {
     setActiveIndex(0);
     setSelectedIndex(null);
   }, [question.id]);
+
+  const activeOption = question.options[activeIndex];
+
+  function handleSelect() {
+    setSelectedIndex(activeIndex);
+    dispatch(
+      addAnswerForQuestion({
+        level,
+        category,
+        question_id: question.id,
+        correct_answer: question.correct_answer,
+        user_answer: activeOption.id,
+        area: question.area,
+      }),
+    );
+  }
 
   return (
     <div className="h-[100dvh] bg-gradient-to-br from-peach via-orange-100 to-pink-100 flex flex-col">
@@ -36,20 +57,19 @@ export default function Category2_TextToVideo({ question, onNext }: any) {
       {/* MAIN CONTENT */}
       <div className="flex-1 px-6 flex items-center justify-center">
         <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-[1fr_220px] gap-6">
-          {/* 🎬 MAIN VIDEO */}
+          {/* MAIN VIDEO */}
           <div className="bg-white/10 backdrop-blur-xl rounded-[2rem] shadow-2xl p-2 flex flex-col ring-4 ring-pink-300 max-h-[80vh]">
             <iframe
-              src={toYoutubeEmbed(question.options[activeIndex].video)}
+              src={toYoutubeEmbed(activeOption.video)}
               className="w-full aspect-video rounded-2xl max-h-[60vh]"
               allowFullScreen
             />
 
             <button
-              onClick={() => setSelectedIndex(activeIndex)}
+              onClick={handleSelect}
               className={`
                 mt-4 py-2 px-6 rounded-full text-lg font-bold
-                inline-block
-                transition-all duration-300  w-[800px] max-w-full text-center ml-[2.8rem]
+                transition-all duration-300 w-[800px] max-w-full text-center ml-[2.8rem]
                 ${
                   selectedIndex === activeIndex
                     ? "bg-green-500 text-white scale-105"
@@ -63,21 +83,12 @@ export default function Category2_TextToVideo({ question, onNext }: any) {
             </button>
           </div>
 
-          {/* 👉 RIGHT VIDEO RAIL */}
+          {/* RIGHT VIDEO RAIL */}
           <div className="hidden lg:flex flex-col gap-3 bg-white/60 backdrop-blur-xl rounded-[2rem] shadow-xl p-3">
             {question.options.map((opt: any, i: number) => (
               <button
                 key={opt.id}
-                onClick={() => {
-                  setActiveIndex(i);
-                  dispatch(
-                    addAnswerForQuestion({
-                      question_id: question.id,
-                      correct_answer: opt.id,
-                      area: question.area,
-                    }),
-                  );
-                }}
+                onClick={() => setActiveIndex(i)}
                 className={`
                   relative rounded-xl overflow-hidden aspect-video
                   transition-all duration-300
@@ -93,14 +104,6 @@ export default function Category2_TextToVideo({ question, onNext }: any) {
                   className="w-full h-full pointer-events-none"
                 />
 
-                {/* PLAY ICON */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-10 h-10 bg-pink-500/90 rounded-full flex items-center justify-center text-white text-lg animate-pulse">
-                    ▶
-                  </div>
-                </div>
-
-                {/* SELECTED BADGE */}
                 {selectedIndex === i && (
                   <div className="absolute inset-0 bg-green-500/40 flex items-center justify-center text-white text-3xl font-extrabold">
                     ✓
@@ -118,12 +121,12 @@ export default function Category2_TextToVideo({ question, onNext }: any) {
           disabled={selectedIndex === null}
           onClick={onNext}
           className="
-          px-24 py-4 rounded-full text-xl font-extrabold
-          bg-gradient-to-r from-pink-500 to-orange-500
-          text-white shadow-xl
-          disabled:opacity-40 disabled:cursor-not-allowed
-          hover:scale-105 transition-all
-          ml-[-15rem]
+            px-24 py-4 rounded-full text-xl font-extrabold
+            bg-gradient-to-r from-pink-500 to-orange-500
+            text-white shadow-xl
+            disabled:opacity-40 disabled:cursor-not-allowed
+            hover:scale-105 transition-all
+            ml-[-15rem]
           "
         >
           Next →

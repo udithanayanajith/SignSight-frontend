@@ -51,9 +51,10 @@ export default function StudentLearningLanding() {
             <PrimaryButton onClick={() => nav(`/learn/${level}`)}>
               Start Learning ✨
             </PrimaryButton>
+            <span className="mx-5"></span>
             <button
               onClick={() => nav("/lessons")}
-              className="px-10 py-4 rounded-full text-lg font-bold
+              className="px-14 py-4 rounded-full text-lg font-bold
              bg-white text-orange-600 border-2 border-orange-400
              hover:bg-orange-50 transition"
             >

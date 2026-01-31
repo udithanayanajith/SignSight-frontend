@@ -1,89 +1,70 @@
+// src/store/questionSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface QuestionAnswer {
+type Answer = {
   question_id: string;
   correct_answer: string;
+  user_answer: string;
   area: string;
-}
-
-interface QuestionsState {
-  questionAnswerList: QuestionAnswer[];
-}
-
-const initialState: QuestionsState = {
-  questionAnswerList: [],
 };
 
-export const questionsSlice = createSlice({
+type Level = "basic" | "intermediate" | "advanced";
+type Category = "category_1" | "category_2" | "category_3" | "category_4";
+
+type QuestionState = {
+  answers: {
+    basic: Record<string, Answer[]>;
+    intermediate: Record<string, Answer[]>;
+    advanced: Record<string, Answer[]>;
+  };
+};
+
+const initialState: QuestionState = {
+  answers: {
+    basic: {
+      category_1: [],
+      category_2: [],
+    },
+    intermediate: {
+      category_2: [],
+      category_3: [],
+    },
+    advanced: {
+      category_3: [],
+      category_4: [],
+    },
+  },
+};
+
+type AddAnswerPayload = {
+  level: Level;
+  category: Category;
+  question_id: string;
+  correct_answer: string;
+  user_answer: string;
+  area: string;
+};
+
+const questionSlice = createSlice({
   name: "questions",
   initialState,
   reducers: {
-    // Add answer - if exists, only update if correct_answer changed
-    addAnswerForQuestion: (state, action: PayloadAction<QuestionAnswer>) => {
-      const existingIndex = state.questionAnswerList.findIndex(
-        (item) => item.question_id === action.payload.question_id,
+    addAnswerForQuestion: (state, action: PayloadAction<AddAnswerPayload>) => {
+      const { level, category, ...answer } = action.payload;
+
+      // prevent duplicates (important!)
+      const existing = state.answers[level][category].find(
+        (a) => a.question_id === answer.question_id,
       );
 
-      if (existingIndex === -1) {
-        // Doesn't exist - add new
-        state.questionAnswerList.push(action.payload);
-      } else {
-        // Exists - check if correct_answer changed
-        const existingItem = state.questionAnswerList[existingIndex];
-        if (existingItem.correct_answer !== action.payload.correct_answer) {
-          // Answer changed - update it
-          state.questionAnswerList[existingIndex] = action.payload;
-        }
-        // If answer is the same, do nothing
+      if (!existing) {
+        state.answers[level][category].push(answer);
       }
     },
 
-    // ... rest of your reducers remain the same
-    updateAnswerForQuestion: (state, action: PayloadAction<QuestionAnswer>) => {
-      const index = state.questionAnswerList.findIndex(
-        (item) => item.question_id === action.payload.question_id,
-      );
-      if (index !== -1) {
-        state.questionAnswerList[index] = action.payload;
-      }
-    },
-
-    upsertAnswerForQuestion: (state, action: PayloadAction<QuestionAnswer>) => {
-      const index = state.questionAnswerList.findIndex(
-        (item) => item.question_id === action.payload.question_id,
-      );
-      if (index !== -1) {
-        state.questionAnswerList[index] = action.payload;
-      } else {
-        state.questionAnswerList.push(action.payload);
-      }
-    },
-
-    removeAnswerForQuestion: (state, action: PayloadAction<string>) => {
-      state.questionAnswerList = state.questionAnswerList.filter(
-        (item) => item.question_id !== action.payload,
-      );
-    },
-
-    removeMultipleAnswers: (state, action: PayloadAction<string[]>) => {
-      state.questionAnswerList = state.questionAnswerList.filter(
-        (item) => !action.payload.includes(item.question_id),
-      );
-    },
-
-    resetAllAnswers: (state) => {
-      state.questionAnswerList = [];
-    },
+    resetAnswers: () => initialState,
   },
 });
 
-export const {
-  addAnswerForQuestion,
-  updateAnswerForQuestion,
-  upsertAnswerForQuestion,
-  removeAnswerForQuestion,
-  removeMultipleAnswers,
-  resetAllAnswers,
-} = questionsSlice.actions;
-
-export default questionsSlice.reducer;
+export const { addAnswerForQuestion, resetAnswers } = questionSlice.actions;
+export default questionSlice.reducer;

@@ -4,7 +4,7 @@
     "category_1": [
       {
         "id": "B-C1-1",
-        "area": "Alphabets",
+        "area": "alphabet",
         "question": "Select the sign for letter A",
         "options": [
           { "id": "A", "image": "/images/signs/alphabet_A.png" },
@@ -16,7 +16,7 @@
       },
       {
         "id": "B-C1-2",
-        "area": "Numbers",
+        "area": "numbers",
         "question": "Select the sign for number 3",
         "options": [
           { "id": "A", "image": "/images/signs/alphabet_A.png" },
@@ -28,7 +28,7 @@
       },
       {
         "id": "B-C1-3",
-        "area": "Simple nouns",
+        "area": "family",
         "question": "Select the sign for APPLE",
         "options": [
           { "id": "A", "image": "/images/signs/alphabet_A.png" },
@@ -41,7 +41,7 @@
 
       {
         "id": "B-C1-4",
-        "area": "Everyday objects",
+        "area": "objects",
         "question": "Select the sign for BOOK",
         "options": [
           { "id": "A", "image": "/images/signs/alphabet_A.png" },
@@ -54,7 +54,7 @@
 
       {
         "id": "B-C1-5",
-        "area": "Basic actions",
+        "area": "actions",
         "question": "Select the sign for RUN",
         "options": [
           { "id": "A", "image": "/images/signs/alphabet_A.png" },
@@ -67,7 +67,7 @@
 
       {
         "id": "B-C1-6",
-        "area": "Basic emotions",
+        "area": "emotions",
         "question": "Select the sign for HAPPY",
         "options": [
           { "id": "A", "image": "/images/signs/alphabet_A.png" },
@@ -80,7 +80,7 @@
 
       {
         "id": "B-C1-7",
-        "area": "Alphabets",
+        "area": "alphabet",
         "question": "Select the sign for letter M",
         "options": [
           { "id": "A", "image": "/images/signs/alphabet_A.png" },
@@ -93,7 +93,7 @@
 
       {
         "id": "B-C1-8",
-        "area": "Numbers",
+        "area": "numbers",
         "question": "Select the sign for number 10",
         "options": [
           { "id": "A", "image": "/images/signs/alphabet_A.png" },
@@ -106,7 +106,7 @@
 
       {
         "id": "B-C1-9",
-        "area": "Simple nouns",
+        "area": "family",
         "question": "Select the sign for DOG",
         "options": [
           { "id": "A", "image": "/images/signs/alphabet_A.png" },
@@ -119,7 +119,7 @@
 
       {
         "id": "B-C1-10",
-        "area": "Everyday objects",
+        "area": "objects",
         "question": "Select the sign for CUP",
         "options": [
           { "id": "A", "image": "/images/signs/alphabet_A.png" },
@@ -134,7 +134,7 @@
     "category_2": [
       {
         "id": "B-C2-1",
-        "area": "Basic actions",
+        "area": "actions",
         "question": "Which video shows the sign for EAT?",
         "options": [
           { "id": "A", "video": "https://youtu.be/mCFMn0UkRt0?si=Btu8cOh91OKq28Op" },
@@ -147,7 +147,7 @@
 
       {
         "id": "B-C2-2",
-        "area": "Basic emotions",
+        "area": "emotions",
         "question": "Which video shows HAPPY?",
         "options": [
           { "id": "A", "video": "https://youtu.be/mCFMn0UkRt0?si=Btu8cOh91OKq28Op" },
@@ -160,7 +160,7 @@
 
       {
         "id": "B-C2-3",
-        "area": "Everyday objects",
+        "area": "objects",
         "question": "Which video shows PHONE?",
         "options": [
           { "id": "A", "video": "https://youtu.be/mCFMn0UkRt0?si=Btu8cOh91OKq28Op" },
@@ -173,7 +173,7 @@
 
       {
         "id": "B-C2-4",
-        "area": "Short sentences",
+        "area": "emotions",
         "question": "Which video shows HELLO?",
         "options": [
           { "id": "A", "video": "https://youtu.be/mCFMn0UkRt0?si=Btu8cOh91OKq28Op" },
@@ -186,7 +186,7 @@
 
       {
         "id": "B-C2-5",
-        "area": "Numbers",
+        "area": "numbers",
         "question": "Which video shows NUMBER 5?",
         "options": [
           { "id": "A", "video": "https://youtu.be/mCFMn0UkRt0?si=Btu8cOh91OKq28Op" },

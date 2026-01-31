@@ -7,7 +7,7 @@
     "category_3": [
       {
         "id": "A-C3-1",
-        "area": "Long sentences",
+        "area": "emotions",
         "question_video": "https://youtu.be/mCFMn0UkRt0?si=Btu8cOh91OKq28Op",
         "options": [
           { "id": "A", "text": "I am lost and need help" },
@@ -18,7 +18,7 @@
       },
       {
         "id": "A-C3-2",
-        "area": "Role-play conversations",
+        "area": "actions",
         "question_video": "https://www.youtube.com/watch?v=mCFMn0UkRt0",
         "options": [
           { "id": "A", "text": "I want to buy a ticket" },
@@ -29,7 +29,7 @@
       },
       {
         "id": "A-C3-3",
-        "area": "Actions + objects",
+        "area": "objects",
         "question_video": "https://www.youtube.com/watch?v=mCFMn0UkRt0",
         "options": [
           { "id": "A", "text": "Turn on the light" },
@@ -40,7 +40,7 @@
       },
       {
         "id": "A-C3-4",
-        "area": "Basic emotions",
+        "area": "numbers",
         "question_video": "https://www.youtube.com/watch?v=mCFMn0UkRt0",
         "options": [
           { "id": "A", "text": "I am worried" },
@@ -51,7 +51,7 @@
       },
       {
         "id": "A-C3-5",
-        "area": "Long sentences",
+        "area": "emotions",
         "question_video": "https://www.youtube.com/watch?v=mCFMn0UkRt0",
         "options": [
           { "id": "A", "text": "I missed the bus this morning" },
@@ -65,7 +65,7 @@
     "category_4": [
       {
         "id": "A-C4-1",
-        "area": "Role-play conversations",
+        "area": "actions",
         "question_video": "https://www.youtube.com/watch?v=mCFMn0UkRt0",
         "instruction": "Watch the video and record your response using sign language. Upload your video.",
         "expected_output": "Responding with directions politely"
