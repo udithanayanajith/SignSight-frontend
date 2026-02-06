@@ -120,14 +120,14 @@ export default function QuizEngine() {
       await new Promise((r) => setTimeout(r, 2000));
 
       await submitLevelResults({
-        user_id: "USER_123",
+        user_id: "Nayanajith",
         level: level as string,
         quizzes: results,
         cat4File: cat4File as File,
       });
 
-      // dispatch(resetAnswers());
-      // navigate("/results");
+      dispatch(resetAnswers());
+      navigate("/results");
     } catch (err) {
       console.error(err);
       setError("Failed to submit results. Please try again.");

@@ -8,6 +8,7 @@ import Results from "./pages/kaveesha/ResultPage";
 import LessonsHome from "./pages/kaveesha/lessons/LessonsHome";
 
 import LessonPlayer from "./pages/kaveesha/lessons/LessonsPlayer";
+import MentorDashboard from "./mentor/MentorDashboard";
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
 
         <Route path="/lessons" element={<LessonsHome />} />
         <Route path="/lessons/:category/:item" element={<LessonPlayer />} />
+        <Route path="/mentorDash" element={<MentorDashboard />} />
 
         {/* <Route path="/lessons/food/:food" element={<FoodPlayer />} />
         <Route path="/lessons/numbers/:number" element={<NumberViewer />} /> */}
