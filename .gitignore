@@ -5,9 +5,11 @@ node_modules/.vite/
 # Vite cache (extra safe)
 .vite/
 
-# Build outputs
+# Vite build outputs and cache
 dist/
 dist-ssr/
+.vite/
+.package-lock.json
 
 # Env
 .env
@@ -19,3 +21,8 @@ dist-ssr/
 # Editor
 .vscode/
 .idea/
+
+#media files
+src/assets/media/
+*.mp4
+*.mov
