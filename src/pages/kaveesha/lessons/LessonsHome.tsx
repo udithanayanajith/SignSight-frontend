@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LessonBackground from "../../../components/ui/LessonBackground";
 import CategoryIntroModal from "../../../components/kaveesha/lessons/CategoryIntroModal";
-import Navbar from "../../../components/kaveesha/Navbar";
+import Navbar from "../../../components/hasadara/Navbar";
 
 type Category = "colors" | "food" | "numbers";
 

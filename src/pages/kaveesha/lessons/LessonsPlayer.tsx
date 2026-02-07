@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { LESSONS_CONFIG } from "../../../config/lessonsConfig";
-import Navbar from "../../../components/kaveesha/Navbar";
+import Navbar from "../../../components/hasadara/Navbar";
 import LessonBackground from "../../../components/ui/LessonBackground";
 
 export default function LessonPlayer() {

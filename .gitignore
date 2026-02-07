@@ -22,7 +22,7 @@ dist-ssr/
 .vscode/
 .idea/
 
-#media files
-src/assets/media/
 *.mp4
 *.mov
+*.webm
+*.avi

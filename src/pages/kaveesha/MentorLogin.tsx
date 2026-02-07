@@ -1,5 +1,5 @@
-import Navbar from "../../components/kaveesha/Navbar";
-import PrimaryButton from "../../components/kaveesha/PrimaryButton";
+import Navbar from "../../components/hasadara/Navbar";
+import PrimaryButton from "../../components/hasadara/PrimaryButton";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
