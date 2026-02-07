@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useUsers, useUserSummary } from "./hooks/useMentorData";
 import OverviewPage from "./pages/OverviewPage";
 import LevelViewPage from "./pages/LevelViewPage";
@@ -7,6 +7,7 @@ import {
   SkeletonStatRow,
   SkeletonChartRow,
 } from "./components/SharedComponents";
+import { useNavigate } from "react-router-dom";
 
 type NavId = "overview" | "level" | "attempts";
 
@@ -17,6 +18,21 @@ const NAV_ITEMS: { id: NavId; icon: string; label: string }[] = [
 ];
 
 export default function MentorDashboard() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const mentorEmail = localStorage.getItem("mentorEmail");
+
+    if (!mentorEmail) {
+      localStorage.clear();
+      navigate("/mentor/login", { replace: true });
+    }
+  }, [navigate]);
+
+  if (!localStorage.getItem("mentorEmail")) {
+    return null;
+  }
+
   const [activeNav, setActiveNav] = useState<NavId>("overview");
 
   // ---- data ----

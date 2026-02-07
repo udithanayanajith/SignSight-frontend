@@ -2,15 +2,54 @@ import Navbar from "../../components/kaveesha/Navbar";
 import PrimaryButton from "../../components/kaveesha/PrimaryButton";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebase";
 
 export default function MentorLogin() {
   const nav = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  function handleLogin() {
-    // TODO: backend mentor auth
-    nav("/mentor/dashboard");
+  async function handleLogin() {
+    try {
+      setError("");
+      setLoading(true);
+
+      await signInWithEmailAndPassword(auth, email, password);
+      localStorage.setItem("mentorEmail", email);
+      nav("/mentorDash");
+    } catch (err: any) {
+      setError(getFirebaseErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function getFirebaseErrorMessage(error: any) {
+    const code = error?.code || "";
+
+    switch (code) {
+      case "auth/user-not-found":
+        return "No mentor account found 👀";
+      case "auth/wrong-password":
+        return "Incorrect password 🔑";
+      case "auth/invalid-email":
+        return "Invalid email address ✉️";
+      case "auth/network-request-failed":
+        return "Network error. Try again 🌐";
+      default:
+        return "Login failed. Please try again 😕";
+    }
+  }
+
+  function Loader() {
+    return (
+      <div className="flex items-center justify-center">
+        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
   }
 
   return (
@@ -59,12 +98,19 @@ export default function MentorLogin() {
 
             <div className="flex justify-center pt-4">
               <PrimaryButton
-                disabled={!email.includes("@") || password.length < 4}
+                disabled={
+                  loading || !email.includes("@") || password.length < 6
+                }
                 onClick={handleLogin}
               >
-                Login as Mentor 🚀
+                {loading ? <Loader /> : "Login as Mentor 🚀"}
               </PrimaryButton>
             </div>
+            {error && (
+              <div className="bg-red-100 border border-red-300 text-red-700 px-4 py-2 rounded-xl text-center text-sm">
+                {error}
+              </div>
+            )}
 
             <p className="text-center text-sm text-gray-600 mt-4">
               New mentor?{" "}
@@ -73,6 +119,15 @@ export default function MentorLogin() {
                 className="text-pink-500 font-semibold cursor-pointer underline"
               >
                 Create an account
+              </span>
+            </p>
+            <p className="text-center text-xs text-gray-400 mt-2">
+              Are you an admin?{" "}
+              <span
+                onClick={() => nav("/admin/login")}
+                className="cursor-pointer hover:underline"
+              >
+                Click here
               </span>
             </p>
           </div>

@@ -2,23 +2,68 @@ import Navbar from "../../components/kaveesha/Navbar";
 import PrimaryButton from "../../components/kaveesha/PrimaryButton";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebase";
+import axios from "axios";
+import { MENTOR_BASE_URI } from "../../config/CONFIG";
 
 export default function MentorSignup() {
   const nav = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [expertise, setExpertise] = useState<string[]>([]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  function toggleExpertise(level: string) {
-    setExpertise((prev) =>
-      prev.includes(level) ? prev.filter((l) => l !== level) : [...prev, level]
+  async function handleSignup() {
+    try {
+      setError("");
+      setLoading(true);
+
+      const userCred = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+
+      await axios.post(MENTOR_BASE_URI + "/api/mentors", {
+        name,
+        email,
+        firebaseUid: userCred.user.uid,
+      });
+      localStorage.clear();
+      localStorage.setItem("mentorEmail", email);
+      nav("/mentorDash");
+    } catch (err: any) {
+      setError(getFirebaseErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function Loader() {
+    return (
+      <div className="flex justify-center items-center">
+        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+      </div>
     );
   }
 
-  function handleSignup() {
-    // TODO: backend mentor creation
-    nav("/mentor/login");
+  function getFirebaseErrorMessage(error: any) {
+    const code = error?.code || "";
+
+    switch (code) {
+      case "auth/weak-password":
+        return "Password must be at least 6 characters 🔐";
+      case "auth/email-already-in-use":
+        return "This email is already registered 📧";
+      case "auth/invalid-email":
+        return "Please enter a valid email address ✉️";
+      case "auth/network-request-failed":
+        return "Network error. Check your connection 🌐";
+      default:
+        return "Something went wrong. Please try again 😕";
+    }
   }
 
   return (
@@ -77,46 +122,24 @@ export default function MentorSignup() {
               "
             />
 
-            {/* Expertise */}
-            <div className="text-center">
-              <p className="font-semibold mb-3 text-gray-700">
-                Teaching Levels
-              </p>
-              <div className="flex justify-center gap-3">
-                {["Basic", "Intermediate", "Advanced"].map((level) => (
-                  <button
-                    key={level}
-                    type="button"
-                    onClick={() => toggleExpertise(level)}
-                    className={`
-                      px-4 py-2 rounded-full text-sm font-medium transition
-                      ${
-                        expertise.includes(level)
-                          ? "bg-pink-400 text-white"
-                          : "bg-white/60 text-gray-700"
-                      }
-                    `}
-                  >
-                    {level}
-                  </button>
-                ))}
-              </div>
-            </div>
-
             <div className="flex justify-center pt-6">
               <PrimaryButton
                 disabled={
+                  loading ||
                   name.length < 2 ||
                   !email.includes("@") ||
-                  password.length < 4 ||
-                  expertise.length === 0
+                  password.length < 6
                 }
                 onClick={handleSignup}
               >
-                Create Mentor Account ✨
+                {loading ? <Loader /> : "Create Mentor Account ✨"}
               </PrimaryButton>
             </div>
-
+            {error && (
+              <div className="bg-red-100 border border-red-300 text-red-700 px-4 py-2 rounded-xl text-center text-sm">
+                {error}
+              </div>
+            )}
             <p className="text-center text-sm text-gray-600 mt-4">
               Already a mentor?{" "}
               <span

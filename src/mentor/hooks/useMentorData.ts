@@ -1,8 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import type { UserDocument, UserSummary, AttemptsPage, Level } from "../types";
+import { BACKEND_BASE_URI, MENTOR_BASE_URI } from "../../config/CONFIG";
 
 const API = "/api/dashboard"; // proxied by Vite → port 5050
+// Get mentor email from localStorage or your auth state
+const mentorEmail = localStorage.getItem("mentorEmail");
 
+// const API = `/api/${mentorEmail}/dashboard`; // proxied by Vite → port 5050
 // ============================================================
 // 1.  useUsers  —  fetch the full user list once
 // ============================================================
@@ -12,7 +16,7 @@ export function useUsers() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`${API}/users`)
+    fetch(`${MENTOR_BASE_URI}/api/${mentorEmail}/dashboard/users`)
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json() as Promise<UserDocument[]>;
