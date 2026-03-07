@@ -11,6 +11,16 @@ import {
   AREA_COLORS,
 } from "../components/SharedComponents";
 
+// Helper to extract date string from either format
+const getDateString = (
+  dateField: string | { $date: string } | undefined,
+): string => {
+  if (!dateField) return "—";
+  if (typeof dateField === "string") return dateField;
+  if (dateField && "$date" in dateField) return dateField.$date;
+  return "—";
+};
+
 const FILTER_OPTIONS: (Level | "all")[] = [
   "all",
   "basic",
@@ -197,7 +207,7 @@ export default function AttemptsPage({ userId }: { userId: string }) {
                           </td>
                           <td className="px-4 py-2.5">
                             <span className="text-xs text-gray-500 whitespace-nowrap">
-                              {formatDate(att.submittedAt)}
+                              {formatDate(getDateString(att.createdAt))}
                             </span>
                           </td>
                           <td className="px-4 py-2.5 text-center text-gray-600 text-xs select-none">

@@ -62,6 +62,8 @@ export default function QuizEngine() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const studentName = localStorage.getItem("studentName");
+
   useEffect(() => {
     fetch(`/src/utils/kaveesha/${level}_level.json`)
       .then((r) => r.json())
@@ -116,11 +118,11 @@ export default function QuizEngine() {
     try {
       setIsLoading(true);
 
-      // 🔥 CRITICAL LINE — forces UI repaint
+      // CRITICAL LINE — forces UI repaint
       await new Promise((r) => setTimeout(r, 2000));
 
       await submitLevelResults({
-        user_id: "Nayanajith",
+        user_id: studentName || "Unknown Student",
         level: level as string,
         quizzes: results,
         cat4File: cat4File as File,

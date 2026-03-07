@@ -10,6 +10,15 @@ export default function StudentLearningLanding() {
   const nav = useNavigate();
   const [level, setLevel] = useState<Level>("basic");
 
+  const [userName, setUserName] = useState<string>("");
+
+  const handleSaveName = () => {
+    if (userName.trim()) {
+      localStorage.setItem("studentName", userName);
+      alert("Name saved successfully!");
+    }
+  };
+
   return (
     <GlassPage>
       <Navbar />
@@ -25,6 +34,21 @@ export default function StudentLearningLanding() {
             Learn sign language step by step 💛
           </p>
 
+          <div className="mb-8 flex gap-3 justify-center">
+            <input
+              type="text"
+              placeholder="Enter your name"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              className="px-4 py-3 rounded-full border-2 border-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+            <button
+              onClick={handleSaveName}
+              className="px-6 py-3 rounded-full bg-orange-600 text-white font-bold hover:bg-orange-700 transition"
+            >
+              Save Name
+            </button>
+          </div>
           <div className="grid sm:grid-cols-3 gap-6 mb-12">
             {[
               { id: "basic", emoji: "🌱", color: "orange" },
