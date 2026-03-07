@@ -11,12 +11,14 @@ import LessonPlayer from "./pages/kaveesha/lessons/LessonsPlayer";
 import MentorDashboard from "./mentor/MentorDashboard";
 import AdminLogin from "./pages/kaveesha/AdminLogin";
 import AdminDashboard from "./pages/kaveesha/AdminDashboard";
+import StudentAttemptsPage from "./pages/kaveesha/StudentAttemptsPage";
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/student/landing" element={<StudentLearningLanding />} />
+        <Route path="/student/attempts" element={<StudentAttemptsPage />} />
         <Route path="/mentor/login" element={<MentorLogin />} />
         <Route path="/mentor/signup" element={<MentorSignUp />} />
         <Route path="/results" element={<Results />} />

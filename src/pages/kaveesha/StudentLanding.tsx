@@ -71,11 +71,10 @@ export default function StudentLearningLanding() {
             ))}
           </div>
 
-          <div className="flex justify-center">
+          <div className="flex justify-center gap-5 flex-wrap">
             <PrimaryButton onClick={() => nav(`/learn/${level}`)}>
               Start Learning ✨
             </PrimaryButton>
-            <span className="mx-5"></span>
             <button
               onClick={() => nav("/lessons")}
               className="px-14 py-4 rounded-full text-lg font-bold
@@ -83,6 +82,14 @@ export default function StudentLearningLanding() {
              hover:bg-orange-50 transition"
             >
               Lessons 📘
+            </button>
+            <button
+              onClick={() => nav("/student/attempts")}
+              className="px-14 py-4 rounded-full text-lg font-bold
+             bg-gradient-to-r from-blue-500 to-purple-600 text-white border-2 border-blue-600
+             hover:shadow-lg transition"
+            >
+              My Results 📊
             </button>
           </div>
         </div>
