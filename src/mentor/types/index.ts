@@ -76,17 +76,21 @@ export interface MLResult {
   shap_values: number[];
 }
 
+export interface MongoDate {
+  $date: string;
+}
+
 export interface AttemptDocument {
   userId: string;
   level: Level;
   attemptNumber: number;
-  submittedAt: string;
+  submittedAt: string | MongoDate;
   quiz: QuizSummary;
   areas: Partial<Record<Area, AreaData>>;
   insights: AttemptInsights;
   videoAnalysis: VideoAnalysis | null;
   ml: MLResult | null;
-  createdAt: string;
+  createdAt: string | MongoDate;
 }
 
 // --------------------------------------------------------
