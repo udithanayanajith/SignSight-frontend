@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import type { Level, Area, AttemptDocument, VideoAnalysis } from "../../mentor/types";
+import type {
+  Level,
+  Area,
+  AttemptDocument,
+  VideoAnalysis,
+} from "../../mentor/types";
 import { useStudentAttempts } from "../../hooks/useStudentData";
 import {
   LevelBadge,
@@ -383,47 +388,292 @@ function VideoDetail({ analysis }: { analysis: VideoAnalysis }) {
   const ec = analysis?.eye_contact;
   const sr = analysis?.sign_recognition;
 
-  const hasEcError = ec && "error" in ec;
-  const hasSrError = sr && "error" in sr;
+  const hasEcError = !!(ec && "error" in ec);
+  const hasSrError = !!(sr && "error" in sr);
+
   const ecData = ec && !hasEcError ? (ec as any) : null;
   const srData = sr && !hasSrError ? (sr as any) : null;
 
+  const finalPercentages = ecData?.final_prediction_percentages ?? {};
+  const finalStats = ecData?.final_prediction_statistics ?? {};
+  const modelStats = ecData?.model_statistics ?? {};
+  const avgConfidence = ecData?.average_model_confidence ?? {};
+  const faceDetection = ecData?.face_detection ?? {};
+
+  const eyeContactPct =
+    finalPercentages?.EyeContact !== undefined
+      ? Number(finalPercentages.EyeContact)
+      : null;
+
+  const lookAwayPct = finalPercentages
+    ? Number(finalPercentages.LookLeft || 0) +
+      Number(finalPercentages.LookRight || 0) +
+      Number(finalPercentages.LookUp || 0) +
+      Number(finalPercentages.LookDown || 0)
+    : null;
+
+  const noFacePct =
+    finalPercentages?.NoFace !== undefined
+      ? Number(finalPercentages.NoFace)
+      : null;
+
+  const eyesClosedPct =
+    finalPercentages?.EyesClosed !== undefined
+      ? Number(finalPercentages.EyesClosed)
+      : null;
+
+  const dominantPrediction = ecData?.dominant_prediction ?? "—";
+  const duration =
+    typeof ecData?.video_duration === "number"
+      ? `${ecData.video_duration}s`
+      : "—";
+
+  const detectedPct = faceDetection?.detected_percentage ?? "—";
+  const notDetectedPct = faceDetection?.not_detected_percentage ?? "—";
+
+  const signText =
+    srData?.answer || srData?.text || srData?.recognized_sign || "—";
+
+  const signConfidence =
+    typeof srData?.confidence === "number"
+      ? Math.round(srData.confidence * 100)
+      : null;
+
+  const predictionRows = [
+    {
+      key: "EyeContact",
+      label: "Eye Contact",
+      pct: Number(finalPercentages?.EyeContact || 0),
+      frames: Number(finalStats?.EyeContact || 0),
+      color: "bg-emerald-500",
+      text: "text-emerald-400",
+    },
+    {
+      key: "LookLeft",
+      label: "Look Left",
+      pct: Number(finalPercentages?.LookLeft || 0),
+      frames: Number(finalStats?.LookLeft || 0),
+      color: "bg-amber-500",
+      text: "text-amber-400",
+    },
+    {
+      key: "LookRight",
+      label: "Look Right",
+      pct: Number(finalPercentages?.LookRight || 0),
+      frames: Number(finalStats?.LookRight || 0),
+      color: "bg-amber-500",
+      text: "text-amber-400",
+    },
+    {
+      key: "LookUp",
+      label: "Look Up",
+      pct: Number(finalPercentages?.LookUp || 0),
+      frames: Number(finalStats?.LookUp || 0),
+      color: "bg-violet-500",
+      text: "text-violet-400",
+    },
+    {
+      key: "LookDown",
+      label: "Look Down",
+      pct: Number(finalPercentages?.LookDown || 0),
+      frames: Number(finalStats?.LookDown || 0),
+      color: "bg-rose-500",
+      text: "text-rose-400",
+    },
+    {
+      key: "EyesClosed",
+      label: "Eyes Closed",
+      pct: Number(finalPercentages?.EyesClosed || 0),
+      frames: Number(finalStats?.EyesClosed || 0),
+      color: "bg-yellow-500",
+      text: "text-yellow-400",
+    },
+    {
+      key: "NoFace",
+      label: "No Face",
+      pct: Number(finalPercentages?.NoFace || 0),
+      frames: Number(finalStats?.NoFace || 0),
+      color: "bg-gray-500",
+      text: "text-gray-300",
+    },
+  ].sort((a, b) => b.pct - a.pct);
+
+  const getAttentionTone = () => {
+    if (lookAwayPct !== null && lookAwayPct >= 60) {
+      return {
+        label: "High Distraction",
+        box: "border-rose-500/30 bg-rose-500/10",
+        text: "text-rose-400",
+      };
+    }
+    if (eyeContactPct !== null && eyeContactPct >= 60) {
+      return {
+        label: "Good Focus",
+        box: "border-emerald-500/30 bg-emerald-500/10",
+        text: "text-emerald-400",
+      };
+    }
+    return {
+      label: "Mixed Attention",
+      box: "border-amber-500/30 bg-amber-500/10",
+      text: "text-amber-400",
+    };
+  };
+
+  const attentionTone = getAttentionTone();
+
+  if (hasEcError || hasSrError) {
+    return (
+      <div className="space-y-2 text-xs">
+        {hasEcError && (
+          <div className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-rose-300">
+            Eye contact analysis failed
+          </div>
+        )}
+        {hasSrError && (
+          <div className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-rose-300">
+            Sign recognition failed
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (!ecData && !srData) {
+    return <p className="text-xs text-gray-600">No detailed results</p>;
+  }
+
   return (
-    <div className="text-xs text-gray-400 flex flex-col gap-1">
-      {hasEcError && <p className="text-rose-400">👀 Eye contact: Error</p>}
-      {ecData && (
-        <>
-          <p>
-            👀 Eye contact:{" "}
-            <strong className="text-teal-400">
-              {ecData.eye_contact?.percentage}
-            </strong>
+    <div className="space-y-4">
+      {/* Summary cards */}
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
+        <MetricCard
+          title="Eye Contact"
+          value={eyeContactPct !== null ? `${eyeContactPct}%` : "—"}
+          sub="Focused frames"
+          tone={
+            eyeContactPct !== null && eyeContactPct >= 60
+              ? "success"
+              : eyeContactPct !== null && eyeContactPct >= 30
+                ? "warning"
+                : "danger"
+          }
+        />
+        <MetricCard
+          title="Look Away"
+          value={lookAwayPct !== null ? `${lookAwayPct.toFixed(1)}%` : "—"}
+          sub="Left / Right / Up / Down"
+          tone={
+            lookAwayPct !== null && lookAwayPct < 30
+              ? "success"
+              : lookAwayPct !== null && lookAwayPct < 60
+                ? "warning"
+                : "danger"
+          }
+        />
+        <MetricCard
+          title="Face Detected"
+          value={detectedPct}
+          sub={`Missing: ${notDetectedPct}`}
+          tone="info"
+        />
+        <MetricCard
+          title="Duration"
+          value={duration}
+          sub={`Dominant: ${dominantPrediction}`}
+          tone="neutral"
+        />
+      </div>
+
+      {/* Highlight banner */}
+      <div className={`rounded-xl border px-4 py-3 ${attentionTone.box}`}>
+        <div className="flex items-start justify-between gap-3 flex-wrap">
+          <div>
+            <p className={`text-sm font-semibold ${attentionTone.text}`}>
+              {attentionTone.label}
+            </p>
+            <p className="text-xs text-gray-300 mt-1">
+              Dominant behavior:{" "}
+              <span className="font-semibold text-white">
+                {dominantPrediction}
+              </span>
+            </p>
+          </div>
+
+          {srData && (
+            <div className="rounded-lg bg-gray-900/50 border border-gray-700 px-3 py-2 min-w-[160px]">
+              <p className="text-[11px] uppercase tracking-wide text-gray-500">
+                Recognized Sign
+              </p>
+              <p className="text-sm font-semibold text-blue-400 capitalize">
+                {signText}
+              </p>
+              {signConfidence !== null && (
+                <p className="text-xs text-gray-400 mt-0.5">
+                  Confidence: {signConfidence}%
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Breakdown */}
+      <div className="rounded-xl border border-gray-700 bg-gray-900/40 p-4">
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            Prediction Breakdown
           </p>
-          <p className="opacity-60">
-            {" "}
-            Look away: {ecData.look_away?.percentage}
-          </p>
-          <p className="opacity-60"> Duration: {ecData.video_duration}s</p>
-        </>
-      )}
-      {hasSrError && (
-        <p className="text-rose-400 mt-1">🤚 Sign recognition: Error</p>
-      )}
-      {srData?.recognized_sign && (
-        <p className="mt-1">
-          🤚 Sign:{" "}
-          <strong className="text-blue-400 capitalize">
-            {srData.recognized_sign}
-          </strong>
-        </p>
-      )}
-      {!ecData && !hasEcError && !srData?.recognized_sign && !hasSrError && (
-        <p className="text-gray-600">No detailed results</p>
-      )}
+          <span className="text-[11px] text-gray-600">
+            Model enabled: {ecData?.model_enabled ? "Yes" : "No"}
+          </span>
+        </div>
+
+        <div className="space-y-3">
+          {predictionRows.map((row) => (
+            <div key={row.key}>
+              <div className="flex items-center justify-between text-xs mb-1">
+                <div className="flex items-center gap-2">
+                  <span className={`font-medium ${row.text}`}>{row.label}</span>
+                  <span className="text-gray-500">{row.frames} frames</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-gray-400">
+                    Avg conf:{" "}
+                    {Math.round((avgConfidence?.[row.key] || 0) * 100)}%
+                  </span>
+                  <span className="font-mono text-gray-200">
+                    {row.pct.toFixed(1)}%
+                  </span>
+                </div>
+              </div>
+
+              <div className="h-2.5 rounded-full bg-gray-800 overflow-hidden">
+                <div
+                  className={`h-full ${row.color} rounded-full transition-all duration-500`}
+                  style={{ width: `${Math.max(0, Math.min(100, row.pct))}%` }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Secondary insights */}
+      <div className="grid md:grid-cols-2 gap-3">
+        <InfoBox
+          title="Focus Summary"
+          items={[
+            `Eye contact: ${eyeContactPct !== null ? `${eyeContactPct}%` : "—"}`,
+            `Look away: ${lookAwayPct !== null ? `${lookAwayPct.toFixed(1)}%` : "—"}`,
+            `Eyes closed: ${eyesClosedPct !== null ? `${eyesClosedPct}%` : "—"}`,
+            `No face: ${noFacePct !== null ? `${noFacePct}%` : "—"}`,
+          ]}
+        />
+      </div>
     </div>
   );
 }
-
 /* ============================================================
    PAGINATION helpers
    ============================================================ */
@@ -473,4 +723,50 @@ function paginationNumbers(
   if (current < total - 2) pages.push("…");
   pages.push(total);
   return pages;
+}
+
+function MetricCard({
+  title,
+  value,
+  sub,
+  tone = "neutral",
+}: {
+  title: string;
+  value: string;
+  sub?: string;
+  tone?: "success" | "warning" | "danger" | "info" | "neutral";
+}) {
+  const toneMap = {
+    success: "border-emerald-500/30 bg-emerald-500/10 text-emerald-400",
+    warning: "border-amber-500/30 bg-amber-500/10 text-amber-400",
+    danger: "border-rose-500/30 bg-rose-500/10 text-rose-400",
+    info: "border-sky-500/30 bg-sky-500/10 text-sky-400",
+    neutral: "border-gray-700 bg-gray-800/70 text-gray-200",
+  };
+
+  return (
+    <div className={`rounded-xl border p-3 ${toneMap[tone]}`}>
+      <p className="text-[11px] uppercase tracking-wide opacity-80">{title}</p>
+      <p className="text-xl font-bold mt-1">{value}</p>
+      {sub ? <p className="text-[11px] mt-1 opacity-70">{sub}</p> : null}
+    </div>
+  );
+}
+
+function InfoBox({ title, items }: { title: string; items: string[] }) {
+  return (
+    <div className="rounded-xl border border-gray-700 bg-gray-900/40 p-4">
+      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2.5">
+        {title}
+      </p>
+      <div className="space-y-2">
+        {items.map((item, i) => (
+          <div key={i} className="flex gap-2 text-xs text-gray-300">
+            <span className="text-violet-400 font-bold">•</span>
+            <span>{item}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
